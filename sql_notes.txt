@@ -1,0 +1,66 @@
+COMANDOS BÁSICOS DE SQL
+
+SELECT - extracts data from a database
+UPDATE - updates data in a database
+DELETE - deletes data from a database
+INSERT INTO - inserts new data into a database
+CREATE DATABASE - creates a new database
+ALTER DATABASE - modifies a database
+CREATE TABLE - creates a new table
+ALTER TABLE - modifies a table
+DROP TABLE - deletes a table
+CREATE INDEX - creates an index (search key)
+DROP INDEX - deletes an index
+
+Tipos de comandos:
+DDL
+DML
+DCL
+TCL
+
+Cláusulas:
+FROM
+WHERE
+GROUP BY
+HAVING
+ORDER BY
+
+Operadores
+?
+?
+
+Funciones
+?
+?
+
+Instrucción SQL: ???
+----------------------------------------------------------------------------------
+---------Ejemlos para crear una tabla--------
+
+CREATE DATABASE IF NOT EXISTS test;
+
+USE test;
+
+CREATE TABLE IF NOT EXISTS books (
+  BookID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, 
+  Title VARCHAR(100) NOT NULL, 
+  SeriesID INT, AuthorID INT);
+
+CREATE TABLE IF NOT EXISTS authors 
+(id INT NOT NULL PRIMARY KEY AUTO_INCREMENT);
+
+CREATE TABLE IF NOT EXISTS series 
+(id INT NOT NULL PRIMARY KEY AUTO_INCREMENT);
+
+---------Insertar valores dentro de una tabla---------
+1- Determinar cuál tabla se va a modificar. (INSERT INTO)
+2- Nombrar los campos que se van a modificar.(Title, SerieID, etc, etc1, etc2)
+3- Ingresar los datos requeridos en el estricto orden que se indicó en el paso anterior.
+	VALUES ("The Fellowship of the Ring",1 ,1 ,2 ,6),
+	       ("blablabla", 2, 3, 4, 5)
+
+INSERT INTO books (Title,SeriesID,AuthorID) 
+VALUES('The Fellowship of the Ring',1,1), 
+      ('The Two Towers',1,1), ('The Return of the King',1,1),  
+      ('The Sum of All Men',2,2), ('Brotherhood of the Wolf',2,2), 
+      ('Wizardborn',2,2), ('The Hobbbit',0,1);
