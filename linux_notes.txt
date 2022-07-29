@@ -1,0 +1,982 @@
+¡Hola! Esta es una lista de comandos que recopilé durante el curso. Incluí unos adicionales que encontré mientras prácticaba el contenido de las clases, y tambien les dejé como bonus un tip de como hacer una papelera de reciclaje funcional el la consola de WSL2.
+
+#Indice
+
+Atajos en la terminal
+Comandos de algunas aplicaciones de terceros (incluye WSL2)
+Comandos básicos
+Navegar por directorios
+Editar y crear archivos de texto
+Utilidades batch básicas
+Utilidades batch avanzadas
+Administración de procesos
+Administración de permisos
+Descarga e instalación de paquetes
+Comandos para compresión de archivos
+Búsqueda de archivos desde la terminal
+Comandos HTTP
+Acceso seguro a otras computadoras
+Variables de entorno
+Cómo crear nuevos comandos
+Programar tareas
+Papelera de reciclaje (Bonus)
+#1. Atajos en la terminal
+
+Presionar TAB mientras estas escribiendo algo
+
+Efecto: te muestra una lista de los comandos disponibles en el computador que empiezan con esas letras.
+
+Presionar tecla UP
+
+Efecto: pasear por los comandos previamente usados (incluidos los de sesiones anteriores)
+
+Ctrl + Shift + r
+
+Efecto: activa una busqueda hacia atrás de todos los comandos que has escrito.
+
+Punto "."
+
+Hace referencia al directorio actual.
+
+Puedes usarlo en lugar de un parámetro para indicar el directorio actual.
+
+Doble punto "…"
+
+Hace referencia al directorio padre.
+
+Puedes usarlo en lugar de un parámetro para indicar el directorio padre.
+
+cd ~
+
+Te desplaza directamente a tu home (la carpeta raíz de tu usuario en el OS) (~ = alt+126)
+
+cd -
+
+Te desplaza al último directorio visitado
+
+cd …
+
+Te desplaza al directorio padre del directorio actual. (una carpeta hacia afuera)
+
+<
+
+“Redireccionar la entrada”. Ingresa el contenido del archivo de la derecha como input para el comando de la izquierda.
+
+Ej:
+mysql -h 127.0.0.1 -u root -p1234 < dump1.sql
+
+En este ejemplo, estas ejecutando el script de dump1.sql en el servidor local de MySQL
+
+>
+
+“Redireccionar la salida”.
+
+Introduces el resultado del comando de la izquierda en el archivo de la derecha.
+
+Ej:
+ls > test.txt
+
+En este ejemplo estas escribiendo la lista de archivos en el directorio actual directamente en el archivo de texto.
+
+OJO: Si usas “>>”, introduces el resultado del comando al final del contenido del archivo (en lugar de sobreescribir)
+
+Pipes (" | ")
+Toma la salida de un proceso y se la pasa como entrada al siguiente proceso. (tambien puedes escribir “|” con alt+124)
+
+Ejemplo:
+head -n1 text.txt | wc
+
+En este ejemplo la terminal toma la primera línea del archivo text.txt, y a eso le aplica el wc.
+
+“&” al final del comando
+
+Hace que el proceso se ejecute en segundo plano.
+
+Ej:
+mysql -h 127.0.0.1 -u root -p1234 < dump1.sql &
+
+Ctrl+z
+
+Envía al proceso que esté en ejecución al Background.
+
+Puedes regresar el proceso al foreground con el comando fg
+
+Ctrl+c
+
+Detiene el proceso que se esté ejecutando en el foreground
+
+Ejecutar un archivo ejecutable
+
+Para ejecutar un archivo ejecutable, basta con introducir la ruta del archivo como si fuera un comando.
+
+Ej: ./hello.php
+
+source tambien es un comando que ejecuta en la terminal el archivo que escribas a continuación. Necesitarás usarlo si decides crear comandos que incluyan un desplazamiento entre carpetas
+
+Ej: source proyectos.sh
+
+sudo
+
+En Unix, existe un super usuario en cada ordenador llamado el usuario root, el cual puede leer y escribir en todos los archivos del computador, y es el único habilitado con ciertos permisos.
+
+sudo es un prefijo que se puede escribir antes del comando para ejecutarlo con permisos del usuario root.
+
+Ej: sudo chown mistofjoy test.txt
+
+> /dev/null
+
+Envía el resultado del comando al archivo /dev/null, que es un archivo tipo agujero negro que descarta todo lo que se introduce en él.
+
+El archivo /dev/null puede usarse como un intermediario de procesos complejos.
+
+Ctrl+l
+
+Desplaza la pantalla hacia abajo para liberarla de texto
+
+#2. Comandos de algunas aplicaciones de terceros
+
+code .
+Abre Visual Studio Code posicionado en en directorio donde corriste el código.
+
+code <archivo>
+
+Abre el archivo que introduciste en visual studio code
+
+wslview
+Si estas en wsl2, te permite abrir el archivo que indiques a cotinuación con aplicaciones nativas de windows 10
+
+Escritura:
+wslview + <RutaArchivo>
+
+Ejemplo:
+wslview blogpost.html
+
+Lynx
+Accede al sitio web que indiques a continuación a través del navegador lynx
+
+Ojo: necesitas haber descargado lynx para hacerlo.
+
+Escritura:
+Lynx + sitio web
+
+Ejemplo:
+Lynx platzi.com
+
+#3. Comandos básicos
+
+**date **
+Nos muestra la fecha de hoy.
+
+Escritura:
+Date
+
+Ej:
+date
+
+echo
+Muestra un mensaje en la pantalla.
+
+Escritura:
+echo + “mensaje entre comillas”
+
+Ej:
+echo "¡hola! ¿Cómo estás?"
+
+**man **
+Muestra un manual sobre otros comandos.
+
+Escritura:
+man + comando
+
+Ej:
+man date
+
+history
+muestra un listado con todos los comandos que has escrito alguna vez. Luego puedes volver a ejecutar un comando antiguo según el número de la lista.
+
+Escritura:
+History
+! + #comandoEnLista
+
+Ej:
+history !43
+
+#4. Navegar por directorios
+
+ls
+"list directory contents". Muestra una lista de los archivos contenidos en en directorio donde estas navegando.
+
+cuando un archivo empieza por un “.”, el computador lo interpreta como que es un archivo oculto.
+
+La lista de archivos suele contener dos archivos que son “.” y “…”
+
+“…” es la dirección al directorio padre (es decir, te mueve un directorio fuera de donde estas)
+
+“.” es la dirección al directorio actual.
+
+Escritura:
+ls
+
+Extensiones:
+1. ls -a: muestra archivos ocultos
+2. Ls -l: muestra los metadatos del archivo (que usuario lo creó, cuando fue creado, etc.) (Si la línea empieza por “d” entonces es un directorio)
+3. Ls -t: ordena los archivos por fecha de modificación
+4. Ls -x: ordena los archivos primero por nombre y despues por extensión
+5. Ls -X: ordena los archivos primero por extensión y luego por nombre
+6. Ls -l: Muestra toda la información (usuario, grupo, permisos, tamaño, fecha y hora de creación.
+7. Ls -lh: Muestra la misma información que ls -l, pero con las unidades de tamaño en KB, MB
+8. Ls -R: Muestra el contenido de todos los subdirectorios de forma recursiva
+9. Ls -S: Ordena los resultados por tamaño de archivo.
+
+Ejemplo:
+ls
+ls -a
+
+pwd
+"Print name of current/working directory" te muestra la dirección del directorio donde estas parado.
+
+Escritura:
+pwd
+
+Ejemplo:
+pwd
+
+cd
+"Change directory", te desplaza a la dirección que escribas a continuación del comando.
+
+Si escribes “cd ~” (alt+126), la consola te desplazará directamente a tu home.
+
+Si escribes “cd -” la consola te desplazará al último directorio visitado.
+
+Escritura:
+cd + path
+
+Ejemplo:
+cd ~/proyecto1
+
+mkdir
+"Make directories", crea un directorio con el nombre que indiques a continuación (si es que no existe aún)
+
+Escritura:
+mkdir + NombreNuevoDirectorio
+
+Ejemplo:
+mkdir personalProjects
+
+cp
+"copy files or directories", copia un archivo en la dirección indicada.
+
+Ojo: para copiar carpetas, necesitas la extensión -r. Solo asi podrás copiar todo el contenido de la carpeta a la ubicación destino.
+
+Escritura:
+cp + NombresDeArchivos + RutaDestino
+
+Extensiones:
+1. -r: copia recursiva. Hace una copia del directorio seleccionado con todo su contenido, y la envía al directorio destino.
+
+Ejemplo:
+cp test.py test/
+
+rm
+"Remove files or directories", borra el archivo indicado a continuación.
+
+Arrojará un error si intentas borrar un directorio
+
+Escritura:
+rm + NombreDelArchivoODirectorio
+
+Extensiones:
+1. -i: te pregunta antes de remover el archivo
+2. -f: remueve forzosamente lo indicado, sin preguntar.
+3. -r: remueve directorios
+
+Ejemplo:
+rm test.py
+
+mv
+"Move (rename) files". Mueve archivos o directorios de una dirección a otra. Hace la operación de borrar y copiar a la vez.
+
+Ojo, las rutas que escribas en el comando deben incluir el nombre del archivo.
+
+Puedes renombrar el archivo si le cambias el nombre en la ruta destino.
+
+Escritura:
+mv + rutaOrigen + rutaDestino
+
+Extensiones:
+1. -i: te pregunta antes de sobre-escribir
+2. -f: No pregunta antes de sobre-escribir
+
+Ejemplo:
+mv ../test.py .
+(mueve el archivo “test.py” del directorio padre al directorio actual)
+
+rmdir
+"Remove empty directories", borra un directorio vacío
+
+No puedes borrar directorios con contenido dentro. Antes tienes que borrar el contenido.
+
+Escritura:
+rmdir + nombre del directorio
+
+Ejemplo:
+rmdir test
+
+#5. Editar y crear archivos de texto
+
+touch
+Crea un archivo con el nombre y extensión que indiques a continuación.
+
+Ojo, puedes crear archivos de texto sin extensión. Estos se suelen usar para crear comandos.
+
+Escritura:
+touch + nombreDelArchivo.txt
+
+Ejemplo:
+touch test.txt
+
+vim
+Inicia un editor de texto interactivo (VIM) que te permite editar el texto de un archivo desde la terminal.
+
+OJO: puedes crear un archivo nuevo si usas la función para entrar en un archivo que no existe (y vas a crear)
+
+Escritura:
+Vim + nombreDelArchivo
+
+Comandos internos de vim:
+1. “:” activa el modo de comandos
+2. “i” inicia el modo de insertar texto.
+3. “:w” guarda el contenido del archivo.
+4. Esc (tecla “escape”): termina el modo en ejecución
+5. “:q” sale del editor de texto vim
+6. “:x” guardar y salir
+
+Ejemplo:
+vim test.txt
+
+nano
+Inicia un editor de texto interactivo que te permite editar el texto de un archivo desde la terminal.
+
+Este tiene en pantalla una librería de comandos para usar.
+
+Esta te lanza al modo edición de una vez, y te pregunta si quieres guardar los cambios antes de salir.
+
+Escritura:
+nano + nombreDelArchivo
+
+Comandos internos:
+1. Ctrl+x: salir del programa
+
+Ejemplo:
+nano test.txt
+
+#6. Utilidades batch básicas
+
+cat
+Muestra en la terminal el contenido completo de un archivo de texto
+
+Escritura:
+cat + nombreDelArchivo.txt
+
+Ejemplo:
+cat test.txt
+
+head
+Muestra en la terminal las primeras lineas de un archivo de texto. Por defecto muestra las primeras 10 líneas.
+
+Extensiones:
+1. “-n #” muestra las primeras # líneas del archivo (ejemplo: “-n 5” muestra las primeras 5 líneas)
+
+Escritura:
+Head + extensión + nombreDelArchivo.txt
+
+Ejemplo:
+Head -n 1 test.txt
+
+**tail **
+Muestra en la terminal las últimas líneas de un archivo de texto. Por defecto muestra las últimas 10 líneas.
+
+Extensiones:
+1. “-n #” muestra las últimas # líneas del archivo (ejemplo: “-n 5” muestra las primeras 5 líneas)
+
+Escritura:
+tail + extensión + nombreDelArchivo.txt
+
+Ejemplo:
+tail -n 1 test.txt
+
+wc
+"print newline, word, and byte counts for each file" Muestra las líneas, word count, y byte count de un archivo de texto.
+
+Escritura:
+wc + extensión + nombreDelArchivo.txt
+
+Ejemplo:
+wc test.txt
+
+more
+Muestra en la terminal el contenido completo de un archivo de texto, pero navegando por él un screenful a la vez.
+
+Puedes avanzar las páginas con la tecla SPACE, y dejar de navegar por el documento (si es muy largo) con la q)
+
+Se usa mucho luego de un pipe para leer mejor el resultado de una operación
+
+Escritura:
+more + extensiones + nombreDelArchivo.txt
+
+Ejemplo:
+more test.txt
+
+#7. Utilidades batch básicas
+
+grep
+"Busqueda por expresiones regulares". Busca en el archivo una línea con la expresión que indiques
+
+Si tienes la nueva windows terminal (de la microsoft store), entonces la palabra que buscas se resaltará en naranja.
+
+Si escribes lo que buscas entre comillas y terminando con “$”, la busqueda será por expresiones que terminen en lo que escribiste (Ej: grep "hanks$" dump1.spl)
+
+Escritura:
+grep + expresiónRegular + archivoDondeBuscarás
+
+Extensiones:
+1. “-i” hace que la busqueda no tome en cuenta mayusculas o minusculas
+
+Ejemplo:
+grep Hanks dump1.sql
+
+(busca la expresión "Hanks en el archivo dump1.sql)
+
+sed
+"String editor". Te ayuda a trabajar sobre el flujo de caracteres. Puedes usarlo para reemplazar una expresión por otra.
+
+OJO: esto no modifica el archivo original. Solo modifica la lectura cuando usas el comando.
+
+Escritura:
+Primero abres un apostrofe (’), luego indicas que quieres hacer una sustitución (s/), informas del término que vas a cambiar (Hanks/) y del termino con el que lo vas a sustituir (Selleck/). Luego cierras el apostrofe (’)
+
+Puedes agregar una extensión antes del apostrofe si quieres, para que la sustitución se haga a lo largo de todo el archivo (g)
+
+Ejemplo:
+sed 's/Hanks/Selleck/g' dump1.sql
+
+Cambia todas los string que contengan “Hanks” en el archivo dump1.sql y los reemplaza por “Selleck”
+
+awk
+Se usa para modificar archivos estructurados (separados por comas o tabs por ejemplo. Uno de estos son los .csv)
+
+Ejemplo:
+awk -F ';' '{ print $1 }' nuevasPelis.csv
+
+#8. Administración de procesos
+
+fg
+"Foreground"
+Toma un proceso que está ejecutandose en el background y lo trae al foreground
+
+Escritura:
+fg
+
+Ej:
+fg
+
+ps
+"Report a snapshot of the current processes".
+
+Muestra un reporte de los procesos ejecutandose al momento de ingresar el comando.
+
+Escritura:
+ps
+
+Ejemplo:
+ps
+
+top
+"display linux processes"
+
+Utilidad interactiva que te muestra como está actualmente el uso del computador. (procesos en ejecución. Memoria en uso. Etc.)
+
+(Sales con la “q”)
+
+Escritura:
+top
+
+Ejemplo:
+top
+
+kill
+Termina el proceso que indiques a continuación
+
+Para usarlo, necesitas identificar el processID (PID) del proceso que quieres terminar. Puedes ver los processID con el comando “ps”
+
+Escritura:
+Kill + identificadorDelProceso(PID)
+
+Ejemplo:
+Kill 58
+
+killall
+Termina el proceso que inició el ejecutable que indiques a continuación.
+
+Para usarlo, necesitas conocer el nombre del archivo que inició el proceso.
+
+Escritura:
+Killall + NombreArchivo
+
+Ejemplo:
+Killall colgado.php
+
+#9. Administración de permisos
+
+chmod
+Modifica manualmente los permisos
+
+Escritura (modo textual):
+Chmod + usuario (dueño, grupo, otherst) + “+/-” + Permiso a agregar o remover + archivo a modificar
+
+u: refiere al dueño
+g: refiere al grupo
+o: refiere a otros
+a: refiere a todos
+-vacio-: refiere a todos (ocurre cuando no se indica ningún usuario en el comando)
+
+-: remueve un permiso
++: agrega un permiso
+
+r: refiere a lectura
+w: refiere a escritura
+x: refiere a ejecución
+
+Ejemplo (textual):
+Chmod o-w nuevo.txt
+
+En este ejemplo se le quita el permiso de editar el archivo a otros
+
+Escritura (binario):
+Permite modificar los permisos para todos los usuarios con un solo comando.
+
+Los permisos de un usuario se rigen por una matriz binaria que al final representa un número (ningun permiso es un 0, solo lectura es un 4, lectura y escritura es un 6, y todos los permisos es un 7)
+
+Hacer el comando en binario te pide una combinación de tres números que configura los permisos para todos los usuarios
+
+Chmod + combinación de números según permisos + archivo
+
+Se usa una combinación de 3 números. El primero habla de los permisos del dueño, el segundo habla de los permisos del grupo, y el último de los permisos de otros.
+
+Ejemplo (binario):
+Chmod 760 hello.php
+
+En este ejemplo se le da al dueño todos los permisos, el grupo puede leer y escribir, y otros no pueden hacer nada.
+
+chown
+Cambia el propietario del archivo. Solo lo puede ejecutar el usuario root (escribiendo sudo antes del comando)
+
+Escritura:
+Chown + usuario del nuevo dueño + archivo
+
+Ejemplo:
+Sudo chown mistofjoy test.txt
+
+Convierte al usuario mistofjoy en el dueño del archivo test.txt
+
+chgrp
+Cambia el grupo de usuarios que pueden acceder al archivo
+
+Solo lo puede ejecutar el usuario root (escribiendo sudo antes del comando)
+
+Escritura:
+Chgrp + usuario del nuevo dueño + archivo
+
+Ejemplo:
+Sudo chgrp www-data test.txt
+
+Cambia el grupo asociado a test.txt para solo incluir al usuario www-data
+
+#10. Descarga e instalación de paquetes
+
+Apt install
+Instala el programa que indiques a continuación, siempre y cuando sea un paquete administrado por apt
+
+Ojo: solo lo puede ejecutar el usuario root
+
+Escritura:
+Apt install + nombre del paquete
+
+Ejemplo:
+sudo apt install lynx
+
+Apt update
+Se usa para instalar paquetes de datos para actualizar el sistema.
+
+Apt upgrade
+Se usa para instalar los paquetes descargados para actualizar el sistema.
+
+#11. Comandos para compresión de archivos
+
+gzip
+Comprime un archivo indicado a continuación en formato .gz
+
+Extensiones:
+1. “-d” restaura el archivo a su forma original
+
+Esctritura:
+gzip + archivo
+
+Ejemplo:
+gzip dump4.sql
+
+tar
+Agrupa archivos en un nuevo archivo .tar
+
+Ojo: Esto no comprime a no ser que uses el parametro “czf”, de lo contrario solo agrupa.
+
+Parametros:
+1. “cf”: crea un archivo con el nombre que indiques a continuación que comprima a los archivos de la ruta que indiques.
+2. “tf”: te permite ver el contenido del archivo comprimido que indiques a continuación
+3. “xf”: Extract file. Extrae los archivos comprimidos en un .tar
+4. “czf” combina y comprime los archivos indicados en un nuevo archivo .tgz
+5. “xzf” descombina y descomprime el contenido de un archivo .tgz
+
+Escritura (combinar):
+Tar + cf (create file) + nombre del archivo comprimido + ruta de los archivos a comprimir
+
+Ejemplo (combinar):
+Tar cf backup.tar backup/*
+
+Crea un archivo llamado backup.tar que comprime todos los archivos ubicados en el directorio backup/
+
+Ejemplo (revisar archivo):
+Tar tf backup.tar
+
+Revisa el contenido del archivo comprimido backup.tar
+
+Ejemplo (extraer):
+tar xf backup.tar
+
+Extrae los archivos de backup.tar en la dirección actual
+
+Ejemplo (combinar y comprimir):
+Tar czf backup.tgz backup/
+
+Combina y comprime los archivos en el directorio ./backup/ en un nuevo archivo llamado backup.tgz
+
+Ejemplo (extraer):
+tar xzf backup.tgz
+
+Extrae los archivos de backup.tgz en la dirección actua
+
+#12. Busqueda de archivos desde la terminal
+
+locate
+Busca un archivo a partir del nombre del archivo que buscas.
+
+Si no encuentra nada, simplemente no muestra nada.
+
+Locate utiliza una base de datos interna de ubuntu para ubicar los archivos. Si no está actualizada, no podrás buscar nada con locate.
+
+Para actualizar la base de datos, utilizas: sudo updatedb
+
+Escritura
+Locate + nombre del archivo
+
+Ejemplo
+Locate hello.php
+
+whereis
+Se utiliza para ubicar archivos binarios (comandos). Se usa principalmente con ejecutables versionados muy similares entre si.
+
+Escritura
+whereis + comando
+
+Ejemplo
+whereis echo
+
+find
+Busca en un arbol de directorios siguiendo varios parametros.
+
+Escritura
+Find + directorio donde buscarás + nombre del archivo o parametros
+
+Parametros
+1. “-user” + usuario: busca los archivos del usuario indicado
+2. “-perm” + permisos en binario (ej: 644): busca los archivos con esa configuración de permisos.
+3. “-type” + tipo de archivo: busca directorios (d), archivos (f), entre otros
+4. “-mtime” + Numero de días transcurridos desde la última modificación: permite buscar archivos en funcion a la ultima modificación. Por ejemplo, +7 busca archivos modificados hace mas de 7 días, y -7 busca archivos modificados hace menos de 7 días
+5. “-exec” + otro comando: Ejecuta el comando descrito a continuación sobre los archivos resultado de la búsqueda.
+
+OJO: Los archivos resultado de la busqueda pueden ser descritos como {}
+
+OJO: debes finalizar el comando con un ;
+
+Ejemplos
+Find . -user mistofjoy -perm 644
+
+Buscan todos los archivos de mistofjoy con matriz de permisos 644
+
+Find . -type f -mtime +7 -exec cp {} ./backup/ \;
+Busca solo archivos modificados hace mas de 7 días y los copia a la carpeta backup/ del directorio actual.
+
+#**13. Comandos HTTP
+
+curl
+Se usa para pedir algo al servidor y obtener la respuesta en pantalla
+
+Escritura
+curl + nombre de dominio
+
+Extensiones
+1. -v: devuelve toda la comunicación vía http
+
+Ejemplo
+curl https://platzi.com
+
+Te muestra lo que el navegador recibe cuando entra a platzi.com (html)
+
+wget
+Se usa para realizar descargas desde servidores HTTP
+
+Escritura
+wget + url con el archivo a descargar
+
+Ejemplo
+wget https://www.php.net/distributions/php-7.3-10.tar.bz2
+
+Descarga el archivo php-7.3-10.tar.bz2 de la ubicación introducida en internet
+
+#14. Acceso seguro a otras computadoras
+
+ssh
+"Secure shell", conección segura o terminal segura.
+
+Cuando lo ejecutas, te conectas directamente a la terminal de tu servidor remoto, donde funcionaran los mismos comandos de siempre.
+
+Ojo, todos los comandos que insertes alli se ejecutaran en el otro servidor.
+
+Ojo: si configuras la conección con tu llave pública y privada, puedes ingresar con la abreviatura de la conección
+
+Escritura
+ssh + usuario + @host (IP) + contraseña
+
+exit
+Termina la ejecución de la terminal. En tu computadora esto solo cierra la terminal. Pero cuando estas conectado a un servidor, esto cierra sesión en el servidor y te regresa a tu terminal.
+
+Escritura
+exit
+
+Ejemplo
+exit
+
+mail
+Envía un correo electronico.
+
+Ojo: necesitas configurar varias cosas para que funcione, pero desde un servidor preparado para hosting deberías tener todo lo necesario ya listo.
+
+escritura
+Mail + extensiones + correo destino + contenido
+
+Extensiones
+1. -s: indica el subject a continuación entre “”
+
+Ejemplo
+echo "probando" | Mail -s "probando para platzi" mchojrin@hotmail.com
+
+Envía por correo electronico el mensaje “probando” con el subject “probando para platzi” a mchojrin@hotmail.com
+
+#15. Variables de entorno
+
+##Asignación global
+
+export
+Permite asignar globalmente una variable de entorno para toda la sesión.
+
+Ojo, para que la terminal distinga a una variable del texto común, debemos utilizar el simbolo $ al empezar a escribirla. (Ej: $PATH)
+
+Escritura
+export VAR=valor
+
+Donde:
+1. VAR: nombre de la variable
+2. valor: el valor que queremos darle
+
+Ejemplo
+export MI_VAR=Mauro
+
+Esto crea la variable $MI_VAR, la cual será válida por toda la sesión (Por ejemplo, podrías probar echo $MI_VAR)
+
+##Asignación particular
+Puedes modificar el valor de una variable de entorno que creaste para ejecutar un único comando.
+
+Esto es practico cuando quieres que un comando se ejecute con la variable diferente, pero no quieres que los demás comandos que le sigan se vean alterados.
+
+VAR=valor + comando
+Con esto puedes alterar el valor de la variable antes de ejecutar un comando.
+
+Ejemplo
+MI_VAR=/home php env.php
+
+Ojo, en este caso, el archivo env.php muestra el contenido de MI_VAR en pantalla (y en la clase funcionó).
+
+Esto significa que este comando si cambia el valor de la variable.
+
+#16. Cómo crear nuevos comandos
+
+Puedes crear un archivo de texto plano con los comandos que vas a ejecutar, y luego invocar a este archivo como si fuera un comando.
+
+Ojo, tus comandos pueden tener una extensión de archivo o no. Basta con crearlos con VIM y ya está.
+
+Puedes crear los archivos en el vim
+
+Primero, crea el archivo con el comando que vayas a crear.
+
+Ejemplo:
+vim practicar
+
+Luego, en la primera línea, empieza el archivo declarando el interprete (Bash):
+
+#!/usr/bin/bash
+
+A continuación, introduce la cadena de comandos que la terminal va a usar para ejecutar el nuevo comando que acabas de crear.
+
+Ejemplo
+
+Vim platzi.sh
+
+Platzi.sh:
+
+#!/usr/bin/bash
+
+NEW_DIR=platzi
+
+if [ ! -d "/root/$NEW_DIR" ]; then
+Mkdir /root/$NEW_DIR;
+fi
+
+cp backup_code.sh /root/$NEW_DIR/
+echo "`date`: Todo listo jefe!"
+Ojo, cuando termines de escribir el archivo, seguramente no tendrás aún permiso de ejecución.
+
+Tienes que habilitarlo luego de crearlo.
+
+OJO, tienes que escribir la dirección correcta del Bash al inicio del archivo del comando para que funcione.
+
+Puedes buscar la ruta con el comando whereis bash
+
+En mi caso la ruta es /usr/bin/bash
+
+Programar comandos en el PATH
+Hay un archivo en el home que se ejecuta cada vez que inicia la terminal llamado .bashrc
+
+No contiene nada, y puedes editarlo para que ejecute funciones que tu desees cada vez que inicie.
+
+Un uso práctico de él es agregando al $PATH la dirección de tus nuevos comandos. Asi podrás ejecutar tus archivos como comandos.
+
+Solo escribe en la primera línea:
+export PATH=$PATH:ruta-de-tus-comandos
+
+(Ej: export PATH=$PATH:/home/mistofjoy/.commands)
+
+De este modo, la dirección de tus comandos se agregará al PATH cada vez que abras la terminal.
+
+OJO: La terminal de windows configura en el .bashrc todos los colores y las funcionalidades adicionales.
+
+Si revisas bien el archivo, verás que este ejecuta un segundo archivo (que inicialmente no existe) llamado .bash_aliases
+
+Ahí puedes hacer la configuración que necesites del PATH.
+
+source
+Lee y ejecuta el contenido de un archivo (generalmente un script de comandos), ejecutandolos dentro de la terminal.
+
+Escritura
+Source + ruta del archivo a ejecutar
+
+Ejemplo
+Source ./personalProjects/project.sh
+
+NOTA
+Creé una carpeta oculta en el home llamada “.commands” donde almacenar mis comandos
+
+Tambien programé el archivo .bash_aliases para incluir la carpeta .commands en el $PATH
+
+Ahora puedo ejecutar mis propios comandos siempre y cuando coloque su nombre.
+
+OJO: los comandos de desplazamiento entre carpetas necesitan ejecutarse con un source antes.
+
+Ej:
+source project.sh
+
+#17. Programar tareas
+
+at
+Te permite programar una tarea para que se ejecute en el tiempo que indiques a continuación
+
+Escritura
+At + tiempo para ejecutar el comando
+
+Al pulsar enter, se abrirá una sección de script donde podrás introducir los comandos de la tarea programada.
+
+Cierras el script con ctrl+d
+
+Ejemplo
+
+At now +2 minutes
+
+At> echo "hola mundo!" > /home/mauro/hola.txt
+Esto programa a la terminal para que en 2 minutos introdusca “hola mundo!” como el contenido del nuevo archivo hola.txt
+
+cron
+Permite programar comandos para que se ejecuten de forma periodica.
+
+Cron no se utiliza como un comando. Simplemente es un servicio que ejecuta lo que hayas programado en el crontab.
+
+crontab
+Invoca la lista de comandos y archivos que puede ejecutar el comando cron.
+
+Escritura
+crontab
+
+Extensiones
+1. -e: permite editar la lista
+2. -r: remueve el crontab actual
+3. -l: muestra el contenido del crontab
+4. -u: te permite introducir el nombre del usuario cuyo crontab quieres ver. (si no indicas uno, él por defecto abre el tuyo).
+
+ejemplo
+crontab -e
+
+Los comandos en crontab funcionan programando primero cuando va a ocurrir cada uno:
+
+Minutos de la hora + horas del día + día del mes + mes del año + día de la semana
+
+Si introduces “*”, cron lo tomará como que es todos los días de la semana, o meses en el año, etc.
+
+Ejemplo
+45 12 * * * echo "hola" > hola2.txt
+
+Significa a las 12:45 de todos los días del mes, todos los meses del año, y todos los días de la semana; el mensaje “hola” se grabará en el archivo hola2.txt
+
+#18. Papelera de reciclaje (Bonus)
+
+¡Creé una papelera de reciclaje!
+
+Esto me alegró porque, cuando usas el comando rm, los archivos simplemente desaparecen sin que puedas localizarlos de nuevo.
+
+En la carpeta .commands/ que previamente creé en el home y que agregué al PATH en la sección anterior, introduje un nuevo comando llamado trash
+
+(Ojo, tienes que tener permiso de ejecución para ejecutar ese comando).
+
+Luego de eso creé una carpeta en el home llamada .trash/, y luego configuré el comando trash con el siguiente script:
+
+#!/usr/bin/bash
+
+mv $1 ~/.trash/;
+Ahora, cuando quieran enviar algo a la papelera de reciclaje, solo tienen que insertar el siguiente comando:
+
+trash <nombre-del-archivo>
+
+Ahora, sus archivos se moveran a la carpeta .trash/ en lugar de desaparecer con el comando rm.
+
+Ojo, ahora tendrás que limpiarla de vez en cuando. Aunque tambien puedes configurar el crontab para que la limpie de forma recurrente.
+
+Ojo, el $1 en el código del archivo significa que usa el primer argumento que introduces luego del comando. Asi que es posible que ese código no funcione si deseas borrar varios archivos con el mismo comando.
+
+Debe haber un modo mejor de escribirlo. Si te interesa puedes investigar más por tu cuenta, o compartir la solución en los comentarios si deseas contribuir con la solución 😃
